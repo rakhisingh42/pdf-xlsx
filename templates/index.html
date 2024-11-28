@@ -3,30 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Sharing Website</title>
+    <title>File Sharing Platform</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background: linear-gradient(135deg, #f3ec78, #af4261);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+        }
+        .navbar {
+            background-color: #343a40;
+        }
+        .navbar-brand, .nav-link {
+            color: #f8f9fa !important;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .list-group-item {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <h1 class="text-center text-primary mb-4">File Sharing Website</h1>
-
-        <!--File Search Bar-->
-        <form method="GET" class="mb-3">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Search files">
-                <button type="submit" class="btn btn-secondary">Search</button>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">File Sharing Platform</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
             </div>
-        </form>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1 class="text-center mb-4">Welcome to Your File Sharing Platform</h1>
+
+        <!-- File Search Bar -->
+        <div class="card p-3 mb-4">
+            <form method="GET">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Search files">
+                    <button type="submit" class="btn btn-secondary">Search</button>
+                </div>
+            </form>
+        </div>
 
         <!-- File Upload Form -->
-        <form method="POST" enctype="multipart/form-data" class="mb-4">
-            <div class="input-group">
-                <input type="file" name="file" class="form-control" required>
-                <button type="submit" class="btn btn-primary">Upload</button>
-            </div>
-        </form>
-        
+        <div class="card p-3 mb-4">
+            <form method="POST" enctype="multipart/form-data">
+                <div class="input-group">
+                    <input type="file" name="file" class="form-control" required>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+        </div>
 
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -46,26 +104,36 @@
         <div class="row">
             <!-- PDF Files -->
             <div class="col-md-6">
-                <h2>PDF Files</h2>
-                <ul class="list-group">
-                    {% for pdf in pdf_files %}
-                    <li class="list-group-item">
-                        <a href="{{ url_for('serve_pdf', filename=pdf) }}" target="_blank">{{ pdf }}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
+                <div class="card p-3">
+                    <h2 class="text-center">PDF Files</h2>
+                    <ul class="list-group">
+                        {% for pdf in pdf_files %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ url_for('serve_pdf', filename=pdf) }}" class="text-white" target="_blank">{{ pdf }}</a>
+                            <form method="POST" action="{{ url_for('delete_pdf', filename=pdf) }}">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
 
             <!-- Excel Files -->
             <div class="col-md-6">
-                <h2>Excel Files</h2>
-                <ul class="list-group">
-                    {% for excel in excel_files %}
-                    <li class="list-group-item">
-                        <a href="{{ url_for('serve_excel', filename=excel) }}" target="_blank">{{ excel }}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
+                <div class="card p-3">
+                    <h2 class="text-center">Excel Files</h2>
+                    <ul class="list-group">
+                        {% for excel in excel_files %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ url_for('serve_excel', filename=excel) }}" class="text-white" target="_blank">{{ excel }}</a>
+                            <form method="POST" action="{{ url_for('delete_excel', filename=excel) }}">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
